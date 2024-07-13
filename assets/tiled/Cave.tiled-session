@@ -1,0 +1,36 @@
+{
+    "activeFile": "C:/Users/adiba/IdeaProjects/DungeonCrawler/assets/tiles/sampleMap.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "C:/Users/adiba/Downloads/kenney_tinyDungeon/Tiled/sampleMap.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 262,
+                "y": 160
+            }
+        },
+        "C:/Users/adiba/Downloads/kenney_tinyDungeon/Tiled/sampleSheet.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "C:/Users/adiba/IdeaProjects/DungeonCrawler/assets/tiles/sampleMap.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 260.5,
+                "y": 155
+            }
+        }
+    },
+    "openFiles": [
+        "C:/Users/adiba/Downloads/kenney_tinyDungeon/Tiled/sampleSheet.tsx",
+        "C:/Users/adiba/IdeaProjects/DungeonCrawler/assets/tiles/sampleMap.tmx"
+    ],
+    "project": "Cave.tiled-project",
+    "recentFiles": [
+        "C:/Users/adiba/Downloads/kenney_tinyDungeon/Tiled/sampleSheet.tsx",
+        "C:/Users/adiba/IdeaProjects/DungeonCrawler/assets/tiles/sampleMap.tmx"
+    ]
+}
