@@ -1,11 +1,14 @@
+/**
+ * Image of a tile
+ */
 package utils.tile;
 
 import utils.resources.Image;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TileImage {
+    // diagonal and normal image
     private BufferedImage normal, diagonal;
 
     public TileImage(BufferedImage normal) {

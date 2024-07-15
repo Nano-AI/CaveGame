@@ -1,12 +1,19 @@
+/**
+ * A specific tile
+ */
 package utils.tile;
 
-import java.awt.image.BufferedImage;
-
 public class Tile {
+    // id of tile
     public int id = 0;
+    // flip flags
     public boolean horizontalFlip = false;
     public boolean verticalFlip = false;
     public boolean diagonalFlip = false;
+    // sheet
+    public TileSheet sheet;
+    // image
+    public TileImage image;
 
     public Tile(int id) {
         this.id = id;

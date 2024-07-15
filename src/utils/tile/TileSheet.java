@@ -1,10 +1,12 @@
+/**
+ * TileSheet class
+ */
 package utils.tile;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import utils.resources.Assets;
-import utils.resources.Image;
 import utils.resources.Images;
 
 import java.awt.image.BufferedImage;
@@ -12,15 +14,24 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class TileSheet implements Images {
+    // get image
     private BufferedImage image;
+    // tile images based off id
     private ArrayList<TileImage> imageList;
+    // width, height, padding
     private int tileWidth, tileHeight, padding;
+    // last + first id
+    public int firstGId = 0;
+    public int lastGId = 0;
+    // sheet width + sheet height
+    private int sheetWidth;
+    private int sheetHeight;
 
     public TileSheet(String path, int tileWidth, int tileHeight) {
         imageList = new ArrayList<>();
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
-        this.image = Image.loadImage(path);
+        this.image = Assets.getImage(path);
         init();
     }
 
@@ -29,7 +40,7 @@ public class TileSheet implements Images {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.padding = padding;
-        this.image = Image.loadImage(path);
+        this.image = Assets.getImage(path);
         init();
     }
 
@@ -44,9 +55,11 @@ public class TileSheet implements Images {
     }
 
     private void init() {
+        // get number of tiles in x and y
         int numX = image.getWidth() / tileWidth;
         int numY = image.getHeight() / tileHeight;
 
+        // subImage to get each tile
         for (int y = 0; y < numY; y++) {
             for (int x = 0; x < numX; x++) {
                 imageList.add(
@@ -61,8 +74,15 @@ public class TileSheet implements Images {
                 );
             }
         }
+        this.sheetWidth = numX;
+        this.sheetHeight = numY;
     }
 
+    /**
+     * Unused; Do not use
+     * @param sheetSource Unused
+     * @return Unused
+     */
     public static TileSheet fromTiled(String sheetSource) {
         Document info = Assets.getXML(sheetSource);
         Element root = info.getDocumentElement();
@@ -73,7 +93,10 @@ public class TileSheet implements Images {
 
         int tileWidth = Integer.parseInt(root.getAttribute("tilewidth"));
         int tileHeight = Integer.parseInt(root.getAttribute("tileheight"));
-        int spacing = Integer.parseInt(root.getAttribute("spacing"));
+        int spacing = 0;
+        if (!root.getAttribute("spacing").isEmpty()) {
+            spacing = Integer.parseInt(root.getAttribute("spacing"));
+        }
 
         NodeList imageList = info.getElementsByTagName("image");
 
@@ -92,7 +115,7 @@ public class TileSheet implements Images {
 
     @Override
     public TileImage getImage(int index) {
-        return imageList.get(index);
+        return imageList.get(index - firstGId + 1);
     }
 
     public int getTileSize() {
@@ -105,5 +128,17 @@ public class TileSheet implements Images {
 
     public int getTileHeight() {
         return tileHeight;
+    }
+
+    public int getSheetWidth() {
+        return sheetWidth;
+    }
+
+    public int getSheetHeight() {
+        return sheetHeight;
+    }
+
+    public int getNumTiles() {
+        return sheetWidth * sheetHeight;
     }
 }

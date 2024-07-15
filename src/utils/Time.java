@@ -1,8 +1,14 @@
+/**
+ * Time manager class
+ */
 package utils;
 
 public class Time {
+    // start time
     public static final long timeStarted = System.nanoTime();
+    // begin and end time
     private static long beginTime, endTime = System.nanoTime();
+    // deltaT
     private static double deltaTime = 0;
 
     public static long getTime() {
@@ -15,6 +21,9 @@ public class Time {
         beginTime = endTime;
     }
 
+    /**
+     * @return Time since last frame
+     */
     public static double deltaT() {
         return deltaTime;
     }

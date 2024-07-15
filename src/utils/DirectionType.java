@@ -1,8 +1,8 @@
 package utils;
 
 public enum DirectionType {
-    D_X,
-    D_Y,
-    D_ALL,
-    D_NONE
+    D_RIGHT,
+    D_LEFT,
+    D_UP,
+    D_NONE, D_DOWN
 }

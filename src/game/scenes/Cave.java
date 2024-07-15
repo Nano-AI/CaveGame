@@ -1,53 +1,85 @@
+/**
+ * Cave scene
+ */
 package game.scenes;
 
 import display.Window;
-import game.entities.Camera;
-import game.entities.Entity;
-import game.entities.Player;
-import utils.math.Rect;
-import utils.resources.Assets;
-import utils.tile.TileSheet;
+import game.entities.*;
 import utils.math.Vector2;
 
-public class Cave extends Scene {
-    public Player player;
-    public Map map;
+import java.util.Collections;
 
+public class Cave extends Scene {
+    // map
+    public Map map;
+    public Goblin enemy;
     @Override
     public void init() {
-        TileSheet playerSheet = Assets.getTileSheet("assets/tiles/tilemap_packed.png", 16, 16);
-        map = new Map(new Vector2(0, 0), new Vector2(2, 2));
+        // create a map
+        map = new Map(new Vector2(0, 0), new Vector2(4, 4));
 
-        map.setMap("assets/tiles/sampleMap.tmx");
-        map.setSheet("assets/tiles/sampleSheet.tsx");
-        map.addHitboxes("Collideable", entities);
+        // setup the tilemap based off of Tiled app
+        map.setMap("assets/tiles/untitled.tmx");
+        // set it so the walls layer is used for collisions
+        map.addHitboxes("Walls", entities);
+        map.addHitboxes("CProps", entities);
+        map.addHitboxes("Cprops2", entities);
 
-        player = new Player(new Vector2(200f, 400f), new Vector2(2, 2), playerSheet);
+        // init the player @    pos                            scale
+        player = new Player(new Vector2(200f, 64f), new Vector2(4, 4));
+        // init player
         player.init();
-        player.setFrameIndex(96);
+        // set the scene
         player.setScene(this);
 
+//        enemy = new Goblin(new Vector2(200f, 500f), new Vector2(2, 2), playerSheet);
+//        enemy.init();
+//        enemy.setFrameIndex(109);
+//        enemy.setScene(this);
+
+        // setup camera & make sure ratio matches with the window
         double widthToHeight = (double) Window.get().getHeight() / Window.get().getWidth();
+        // setup the camera
         camera = new Camera(new Vector2(16, 16),
                 new Vector2(500, 500 * widthToHeight),
-                new Vector2(map.getWidth() + 10, map.getHeight() + 32));
+                new Vector2(map.getWidth() - 16, map.getHeight() + 16));
 
+        // init camera
         camera.init();
+        // focus on player
         camera.setFocus(player);
-
+        // add player to entities
         entities.add(player);
     }
 
     @Override
     public void update() {
+        // update camera
         camera.update();
-        player.update();
+        // sort by y-axis
+        Collections.sort(entities);
+        // update entities
+        for (Entity e : entities) {
+            e.update();
+        }
     }
 
     @Override
     public void render() {
-        camera.render();
+        // render tile map
         map.renderMap();
-        player.render();
+        // render camera
+        camera.render();
+        // iterate through entities
+        for (Entity e : entities) {
+            e.render(); // render entity
+            if (e instanceof Empty) {
+                Window.getBuffer().drawRect(
+                        (int) e.getPosition().x,
+                        (int) e.getPosition().y,
+                        32, 32
+                );
+            }
+        }
     }
 }
