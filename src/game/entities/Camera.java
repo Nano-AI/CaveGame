@@ -5,8 +5,11 @@
 package game.entities;
 
 import display.Window;
+import input.KeyInput;
 import utils.math.Vector2;
 import utils.tile.TileSheet;
+
+import java.awt.event.KeyEvent;
 
 public class Camera extends Entity {
     // focus on
@@ -59,7 +62,9 @@ public class Camera extends Entity {
         position.x += dx;
         position.y += dy;
         // translate the buffer by dx and dy
-        Window.getBuffer().translate(-dx, -dy);
+        // TODO: ADD THIS BACK
+//        if (KeyInput.isPressed(KeyEvent.VK_SPACE))
+            Window.getBuffer().translate(-dx, -dy);
     }
 
     @Override
@@ -84,5 +89,13 @@ public class Camera extends Entity {
      */
     public void setFocus(Entity e) {
         focus = e;
+    }
+
+    public Vector2 getCameraSize() {
+        return this.cameraSize;
+    }
+
+    public Entity getFocus() {
+        return this.focus;
     }
 }

@@ -4,6 +4,7 @@
 package utils.resources;
 
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class Sound {
     // volume
@@ -12,7 +13,7 @@ public class Sound {
     }
 
     // set volume
-    public static Volume volume = Volume.MEDIUM;
+    public Volume volume = Volume.MEDIUM;
     // audio clip
     private final Clip clip;
 
@@ -39,6 +40,13 @@ public class Sound {
             clip.setFramePosition(0);
             // replay
             clip.start();
+        }
+    }
+
+    public void setVolume(int level) {
+        FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.VOLUME);
+        if (volume != null) {
+            volume.setValue((float) (level / 100.0));
         }
     }
 }

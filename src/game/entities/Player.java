@@ -8,7 +8,7 @@ import game.entities.items.Item;
 import game.entities.items.Sword;
 import input.KeyInput;
 import input.MouseInput;
-import utils.DirectionType;
+import utils.Timer;
 import utils.math.Range;
 import utils.math.Rect;
 import utils.resources.Assets;
@@ -28,16 +28,14 @@ public class Player extends Entity {
     private TileSheet walk;
     private TileSheet attack;
     // TODO: Create timer class to simplify this
-    // time between each walk animation update
-    private final double walkTimeToSwapAnimation = 0.1;
-    // general time to swap the animation
-    private double timeToSwapAnimation = walkTimeToSwapAnimation;
-    // timer for swapping animation
-    private double timeLeftToSwapAnimation;
-    // time between each sound
-    private final double walkTimeToPlaySound = 0.2;
-    // timer for time between each sound
-    private double timeLeftToPlaySound = walkTimeToPlaySound;
+    // timer to keep track of when to update walk animation
+    private Timer walkAnimationTimer = new Timer(0.1);
+    // timer to keep track of when to play walk sound
+    private Timer walkSoundTimerTimer = new Timer(0.2);
+    // timer to keep track of when to update attack animation
+    private Timer attackAnimationTimer;
+    // timer to keep track of when to update general animation
+    private Timer animationTimer;
     // range of frameIndexes for the player
     private Range animationFrames;
     // sword
@@ -66,6 +64,9 @@ public class Player extends Entity {
         this.animationFrames = new Range(0, 0);
         // setup swords
         this.sword = new Sword(this);
+
+        this.animationTimer = this.walkAnimationTimer;
+        this.attackAnimationTimer = new Timer(sword.getAttackSpeed() / attack.getSheetWidth());
 
         // add the sword to inventory
         inventory[0] = sword;
@@ -114,10 +115,13 @@ public class Player extends Entity {
         animationFrames.setValue(prevVal + animationFrames.getMin());
 
         // update timer variables
-        timeLeftToSwapAnimation -= Time.deltaT();
-        timeLeftToPlaySound -= Time.deltaT();
+        walkSoundTimerTimer.update();
+        animationTimer.update();
+
+//        timeLeftToSwapAnimation -= Time.deltaT();
+//        timeLeftToPlaySound -= Time.deltaT();
         // if animatin is set to walking, we're moving, and it's time to play a sound
-        if (image == walk && !direction.isZero() && timeLeftToPlaySound <= 0) {
+        if (image == walk && !direction.isZero() && walkSoundTimerTimer.isDone()) {
             // randomly play a soudn
             int random = (int) (Math.random() * 100);
             if (random <= 33) {
@@ -128,10 +132,10 @@ public class Player extends Entity {
                 walk3.play();
             }
             // reset the timer
-            timeLeftToPlaySound = walkTimeToPlaySound;
+            walkSoundTimerTimer.restart();
         }
         // check if it's time to swap animation
-        if (timeLeftToSwapAnimation <= 0) {
+        if (animationTimer.isDone()) {
             // are we supposed to animate rn?
             boolean canAnimate = false;
             int i = 0;
@@ -156,7 +160,7 @@ public class Player extends Entity {
             // if we can animate, update the frame index and reset timer
             if (canAnimate) {
                 setFrameIndex(i);
-                timeLeftToSwapAnimation = timeToSwapAnimation;
+                animationTimer.restart();
             }
         }
 
@@ -202,9 +206,9 @@ public class Player extends Entity {
             // reset frames so index = 0
             this.animationFrames.reset();
             // calculate speed of animation depending on the item speed
-            this.timeToSwapAnimation = this.sword.getAttackSpeed() / (attack.getSheetWidth());
+            this.animationTimer = this.attackAnimationTimer;
             // reset timer
-            this.timeLeftToSwapAnimation = this.timeToSwapAnimation;
+            this.animationTimer.restart();
         }
         // if the attack animation is done
         else if (!this.attacking && !reset && this.animationFrames.hasCapped()) {
@@ -215,7 +219,7 @@ public class Player extends Entity {
             // reset frames
             this.animationFrames.reset();
             // reset timer
-            this.timeToSwapAnimation = walkTimeToSwapAnimation;
+            this.animationTimer.restart();
         }
     }
 
@@ -255,7 +259,7 @@ public class Player extends Entity {
         // setup custom hitbox
         this.hitbox = new Rect(
                 (int) (position.x - scaleX / 2 + scaleX * 0.2),
-                (int) position.y + scaleY / 2 - scaleY * 0.4,
+                (int) position.y + scaleY / 2 - scaleY * 0.3,
                 scaleX * 0.6,
                 scaleY * 0.2
         );

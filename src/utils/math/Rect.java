@@ -54,7 +54,7 @@ public class Rect {
                 && position.y < r.position.y + r.size.y + padding.y && position.y + size.y + padding.y > r.position.y;
     }
 
-//    public static boolean isIntersecting(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) {
-//        return pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x && pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y;
-//    }
+    public static boolean isIntersecting(Vector2 pos1, Vector2 size1, Vector2 pos2, Vector2 size2) {
+        return pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x && pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y;
+    }
 }

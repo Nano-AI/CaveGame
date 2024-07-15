@@ -1,5 +1,6 @@
-package display;
+package game.ui;
 
+import display.Window;
 import game.entities.Camera;
 import utils.Time;
 import utils.Timer;
@@ -14,7 +15,10 @@ public class FPSLabel extends UI {
 
     @Override
     public void render() {
-        Window.getBuffer().drawString(String.format("FPS: %d", fps), (int) (camera.getPosition().x), (int) (camera.getPosition().y + 10));
+        Window.getBuffer().drawString(String.format("" +
+                "FPS: %d       Pos: (%d, %d)", fps,
+                (int) camera.getFocus().getPosition().x, (int) camera.getFocus().getPosition().y),
+                (int) (camera.getPosition().x), (int) (camera.getPosition().y + 10));
         if (updateTimer.isDone()) {
             fps = (int) (1 / Time.deltaT());
             updateTimer.restart();

@@ -3,6 +3,8 @@
  */
 package utils.tile;
 
+import utils.math.Rect;
+
 public class Tile {
     // id of tile
     public int id = 0;
@@ -10,6 +12,7 @@ public class Tile {
     public boolean horizontalFlip = false;
     public boolean verticalFlip = false;
     public boolean diagonalFlip = false;
+    public boolean renderOnTop = false;
     // sheet
     public TileSheet sheet;
     // image

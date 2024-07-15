@@ -31,6 +31,7 @@ public abstract class Entity implements Comparable<Entity> {
     protected boolean attacking = false;
     // the attack range of entity
     protected double attackRange = 40.0;
+//    protected double attackRange = 10000.0;
     // inventory size of entity
     protected int inventorySize = 8;
     // items in inventory
@@ -39,6 +40,7 @@ public abstract class Entity implements Comparable<Entity> {
     protected int equippedSlot = 0;
     // if they have to reset animation
     protected boolean reset = true;
+    protected boolean remove = false;
 
     public Entity(Vector2 position) {
         this.position = position;
@@ -123,7 +125,7 @@ public abstract class Entity implements Comparable<Entity> {
         // iterate through every entity
         for (Entity e : scene.getEntities()) {
             // if entity is colliding with another entity
-            if (e.hitbox != null && e.hitbox.isIntersecting(this.hitbox) && e != this) {
+            if (e.hitbox != null && e.hitbox.isIntersecting(this.hitbox) && e != this && !e.getClass().equals(this.getClass())) {
                 // cannot move
                 canMove = false;
                 break;
@@ -198,5 +200,9 @@ public abstract class Entity implements Comparable<Entity> {
 
     public void setReset(boolean reset) {
         this.reset = reset;
+    }
+
+    public boolean shouldRemove() {
+        return this.remove;
     }
 }

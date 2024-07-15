@@ -6,6 +6,8 @@ package utils.resources;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Document;
@@ -55,6 +57,7 @@ public class Assets {
      */
     public static BufferedImage getImage(String path) {
         // load file
+//        File file = new File(path);
         File file = new File(path);
         // check if it contains
         if (images.containsKey(file.getAbsolutePath())) {
@@ -74,6 +77,7 @@ public class Assets {
         // create the document
         Document d;
         // get file path
+//        File f = new File(path);
         File f = new File(path);
         // if it doens't exist
         if (!xmls.containsKey(f.getAbsolutePath())) {
@@ -110,6 +114,7 @@ public class Assets {
      */
     public static TileSheet getTileSheet(String path, int tileWidth, int tileHeight, int spacing) {
         // file of image
+//        File f = new File(path);
         File f = new File(path);
         // check if it's already been loaded, return it
         if (tilesheets.containsKey(f.getAbsolutePath())) {
@@ -130,6 +135,7 @@ public class Assets {
      */
     public static TileMap getTileMap(String path) {
         // get file
+//        File f = new File(path);
         File f = new File(path);
         // create tile map
         TileMap map;
@@ -152,6 +158,7 @@ public class Assets {
      */
     public static Clip getClip(String path) {
         // get the file
+//        File f = new File(path);
         File f = new File(path);
         // create the clip
         Clip c = null;
@@ -182,6 +189,7 @@ public class Assets {
      * @return Loaded sound
      */
     public static Sound getSound(String path) {
+//        File f = new File(path);
         File f = new File(path);
         Sound s = null;
         if (!sounds.containsKey(f.getAbsolutePath())) {
@@ -192,4 +200,13 @@ public class Assets {
         }
         return s;
     }
+
+//    public static File new File(String path) {
+//        URL input = Assets.class.getResource(path);
+//        if (input == null) {
+//            input = Assets.class.getClassLoader().getResource(path);
+//        }
+//        assert input != null;
+//        return new File(input.getFile());
+//    }
 }

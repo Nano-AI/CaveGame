@@ -4,6 +4,7 @@
 package game.scenes;
 
 import display.Window;
+import game.entities.Camera;
 import game.entities.Empty;
 import game.entities.Entity;
 import utils.resources.Assets;
@@ -11,6 +12,7 @@ import utils.tile.*;
 import utils.math.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class Map {
@@ -20,6 +22,74 @@ public class Map {
     private Vector2 tileScale, position;
     // hitboxes
     private List<Rect> hitboxes;
+    public Camera camera;
+    private BufferedImage baseMap = null;
+    private BufferedImage aboveMap = null;
+
+    public void setupImages() {
+        if (this.map == null) {
+            throw new RuntimeException("TileMap not initialized");
+        }
+        if (this.map.getSheets().isEmpty()) {
+            throw new RuntimeException("TileSheet not initialized");
+        }
+
+        System.out.println(this.map.getTileHeight() + " " + this.map.getTileWidth());
+        System.out.println(this.map.getHeight() + " " + this.map.getWidth());
+        baseMap = new BufferedImage((int) (this.map.getTileWidth() * this.map.getWidth() * this.tileScale.x),
+                (int) (this.map.getTileHeight() * this.map.getHeight() * this.tileScale.y), BufferedImage.TYPE_INT_ARGB);
+        aboveMap = new BufferedImage((int) (this.map.getTileWidth() * this.map.getWidth() * this.tileScale.x),
+                (int) (this.map.getTileHeight() * this.map.getHeight() * this.tileScale.y), BufferedImage.TYPE_INT_ARGB);
+
+        TileMapLayer[] layers = this.map.getLayers();
+        Graphics2D baseGraphics = baseMap.createGraphics();
+        Graphics2D aboveGraphics = aboveMap.createGraphics();
+
+        int tileWidth = (int) (this.map.getTileWidth() * tileScale.x);
+        int tileHeight = (int) (this.map.getTileHeight() * tileScale.y);
+
+        for (TileMapLayer layer : layers) {
+            for (int y = 0; y < layer.getHeight(); y++) {
+                for (int x = 0; x < layer.getWidth(); x++) {
+                    Tile t = layer.at(y, x);
+                    Graphics2D g;
+                    if (t.renderOnTop) {
+                        g = aboveGraphics;
+                    } else {
+                        g = baseGraphics;
+                    }
+
+                    int xPos = (int) tileWidth * x;
+                    int yPos = (int) tileHeight * y;
+
+                    if (t.id > 0 && t.sheet != null) {
+                        TileImage image = t.sheet.getImage(t.id - 1);
+                        if (image == null) {
+                            continue;
+                        }
+
+                        int drawX = xPos - (tileWidth / 2);
+                        int drawY = yPos - (tileHeight / 2);
+                        int width = tileWidth;
+                        int height = tileHeight;
+
+                        if (t.diagonalFlip) {
+                            g.drawImage(image.diagonal(), xPos + (tileWidth / 2), yPos + (tileHeight / 2), -tileWidth, -tileHeight, null);
+                        } else if (t.horizontalFlip) {
+                            g.drawImage(image.normal(), xPos + (tileWidth / 2), yPos - (tileHeight / 2), -tileWidth, tileHeight, null);
+                        } else if (t.verticalFlip) {
+                            g.drawImage(image.normal(), xPos - (tileWidth / 2), yPos + (tileHeight / 2), tileWidth, -tileHeight, null);
+                        } else {
+                            g.drawImage(image.normal(), drawX, drawY, width, height, null);
+                        }
+                    }
+                }
+            }
+        }
+
+        baseGraphics.dispose();
+        aboveGraphics.dispose();
+    }
 
     public Map() {
         this(new Vector2(1, 1), new Vector2());
@@ -39,73 +109,18 @@ public class Map {
         this.map = TileMap.fromTiled(map);
     }
 
+    public void renderMap() {
+        renderMap(false);
+    }
+
     /**
      * Render the map
      */
-    public void renderMap() {
-        // error checking
-        if (this.map == null) {
-            throw new RuntimeException("TileMap not initialized");
-        }
-        if (this.map.getSheets().isEmpty()) {
-            throw new RuntimeException("TileSheet not initialized");
-        }
-
-        // get the layers of the maps
-        TileMapLayer[] layers = this.map.getLayers();
-        // get the window buffer graphics
-        Graphics2D g = Window.getBuffer();
-
-        // get the tile width and tile height
-        int tileWidth = (int) (this.map.getTileWidth() * tileScale.x);
-        int tileHeight = (int) (this.map.getTileHeight() * tileScale.y);
-        // iterate through layers
-        for (TileMapLayer layer : layers) {
-            // iterate through each tile
-            for (int y = 0; y < layer.getHeight(); y++) {
-                for (int x = 0; x < layer.getWidth(); x++) {
-                    // get the tile
-                    Tile t = layer.at(y, x);
-                    // make sure tile != 0 b/c we don't need to render that
-                    // and make sure it has a sheet
-                    if (t.id > 0 && t.sheet != null) {
-                        // get the tile image by the id
-                        TileImage image = t.sheet.getImage(t.id - 1);
-                        // if image is null, just continue
-                        if (image == null)  {
-                            continue;
-                        }
-                        // get the x & y postiion of the tile
-                        int xPos = (int) position.x + tileWidth * x;
-                        int yPos = (int) position.y + tileHeight * y;
-
-                        // flip the image based off it's flip flags
-                        if (t.diagonalFlip) {
-                            // Draw diagonally flipped image
-                            g.drawImage(image.diagonal(), xPos + (tileWidth / 2), yPos + (tileHeight / 2), -tileWidth, -tileHeight, null);
-                        } else if (t.horizontalFlip) {
-                            // Draw horizontally flipped image
-                            g.drawImage(image.normal(), xPos + (tileWidth / 2), yPos - (tileHeight / 2), -tileWidth, tileHeight, null);
-                        } else if (t.verticalFlip) {
-                            // Draw vertically flipped image
-                            g.drawImage(image.normal(), xPos - (tileWidth / 2), yPos + (tileHeight / 2), tileWidth, -tileHeight, null);
-                        } else {
-                            // Draw normally
-                            g.drawImage(image.normal(), xPos - (tileWidth / 2), yPos - (tileHeight / 2), tileWidth, tileHeight, null);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean collides(Rect r) {
-        for (Rect rect : hitboxes) {
-            if (rect.isIntersecting(r)) {
-                return true;
-            }
-        }
-        return false;
+    public void renderMap(boolean onTop) {
+        BufferedImage image = onTop ? aboveMap : baseMap;
+        Window.getBuffer().drawImage(
+                image,
+                (int) (position.x), (int) position.y, null);
     }
 
     /**
@@ -126,12 +141,13 @@ public class Map {
         // iterate through every tile
         for (int y = 0; y < layer.getHeight(); y++) {
             for (int x = 0; x < layer.getWidth(); x++) {
+                Tile t = layer.at(y, x);
                 // make sure it's not empty, and it's supposed to be in that layer
-                if (layer.at(y, x).id != 0 && layer.at(y, x).id - layer.at(y, x).sheet.firstGId > 0) {
+                if (t.id != 0 && t.id - t.sheet.firstGId > 0) {
                     // create a rect
                     Rect r = new Rect(
-                            x * tileWidth - tileWidth / 2,
-                            y * tileHeight - tileHeight / 2,
+                            x * tileWidth - tileWidth / 2 + (int) position.x,
+                            y * tileHeight - tileHeight / 2 + (int) position.y,
                             map.getTileWidth() * tileScale.x,
                             map.getTileHeight() * tileScale.y
                     );
@@ -152,5 +168,15 @@ public class Map {
 
     public int getHeight() {
         return this.map.getHeight() * this.map.getTileHeight() * (int) (tileScale.y / 2);
+    }
+
+    public void addRenderOnTop(String name) {
+        TileMapLayer layer = map.getLayer(name);
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                Tile t = layer.at(y, x);
+                t.renderOnTop = true;
+            }
+        }
     }
 }

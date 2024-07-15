@@ -1,4 +1,4 @@
-package display;
+package game.ui;
 
 import game.entities.Camera;
 
