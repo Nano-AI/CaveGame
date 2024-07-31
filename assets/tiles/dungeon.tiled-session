@@ -3,14 +3,14 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "untitled.tmx",
+    "activeFile": "midMap.tmx",
     "expandedProjectPaths": [
         "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "Props.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 3
         },
         "Tileset.tsx": {
             "scaleInDock": 4,
@@ -30,6 +30,14 @@
             "viewCenter": {
                 "x": 410.5,
                 "y": 311
+            }
+        },
+        "midMap.tmx": {
+            "scale": 8,
+            "selectedLayer": 8,
+            "viewCenter": {
+                "x": 219,
+                "y": 109.375
             }
         },
         "midMap.tsx": {
@@ -56,13 +64,16 @@
     "map.tileWidth": 8,
     "map.width": 50,
     "openFiles": [
-        "untitled.tmx"
+        "untitled.tmx",
+        "bigCave.tmx",
+        "midMap.tmx"
     ],
     "project": "dungeon.tiled-project",
     "recentFiles": [
-        "midMap.tsx",
-        "bigCave.tmx",
         "untitled.tmx",
+        "bigCave.tmx",
+        "midMap.tmx",
+        "midMap.tsx",
         "dungeon..tmx",
         "Tileset.tsx"
     ],

@@ -114,5 +114,6 @@ public class Cave extends Scene {
         }
         map.renderMap(true);
         fpsLabel.render();
+        player.getInventory().render();
     }
 }

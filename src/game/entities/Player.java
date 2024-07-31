@@ -6,6 +6,7 @@ package game.entities;
 import display.Window;
 import game.entities.items.Item;
 import game.entities.items.Sword;
+import game.ui.Inventory;
 import input.KeyInput;
 import input.MouseInput;
 import utils.Timer;
@@ -46,6 +47,8 @@ public class Player extends Entity {
     private Sound walk2;
     private Sound walk3;
 
+    private Inventory inventory;
+
     public Player(Vector2 position, Vector2 scale) {
         super(position, scale);
         // init walk sounds
@@ -57,7 +60,6 @@ public class Player extends Entity {
         walk = Assets.getTileSheet("assets/tiles/Characters/Human/Walk.png", 32, 32);
         attack = Assets.getTileSheet("assets/tiles/Characters/Human/Attack.png", 32, 32);
         // setup inventory
-        this.inventory = new Item[this.inventorySize];
         // setup image
         this.image = this.walk;
         // setup animation frames
@@ -68,9 +70,10 @@ public class Player extends Entity {
         this.animationTimer = this.walkAnimationTimer;
         this.attackAnimationTimer = new Timer(sword.getAttackSpeed() / attack.getSheetWidth());
 
+        this.inventory = new Inventory(scene.getCamera(), this, new Vector2(32, 32));
         // add the sword to inventory
-        inventory[0] = sword;
-        inventory[0].setEquipped(true);
+        sword.setEquipped(true);
+        inventory.set(0, sword);
     }
 
     @Override
@@ -169,12 +172,13 @@ public class Player extends Entity {
         // then mult by a constant, speed
         Vector2 dp = direction.unitVector().multiply(Time.deltaT()).multiply(100);
         // if we're not attacking, move
-        if (!attacking && !inventory[equippedSlot].isUsing()) {
+        if (!attacking && !inventory.get(equippedSlot).isUsing()) {
             movePosition(dp);
         }
 
         // iterate through every item
-        for (Item item : inventory) {
+        for (int i = 0; i < inventory.getInventorySize(); i++) {
+            Item item = inventory.get(i);
             // update item for cooldowns
             if (item != null) {
                 item.update();
@@ -186,11 +190,11 @@ public class Player extends Entity {
         // if mouse is down
         if (mouseDown) {
             // make sure equipped item isn't null
-            if (inventory[equippedSlot] != null) {
+            if (inventory.get(equippedSlot) != null) {
                 // if it's a sword
-                if (inventory[equippedSlot] == sword) {
+                if (inventory.get(equippedSlot) == sword) {
                     // use it
-                    inventory[equippedSlot].use();
+                    inventory.get(equippedSlot).use();
                     // we havnet reset, we need to reset
                     this.reset = false;
                 }
@@ -238,13 +242,14 @@ public class Player extends Entity {
                 (int) scaleY,
                 null
         );
-        graphics.drawRect(
-                (int) (hitbox.position.x),
-                (int) (hitbox.position.y),
-                (int) hitbox.size.x,
-                (int) hitbox.size.y
-        );
-        for (Item item : inventory) {
+//        graphics.drawRect(
+//                (int) (hitbox.position.x),
+//                (int) (hitbox.position.y),
+//                (int) hitbox.size.x,
+//                (int) hitbox.size.y
+//        );aaaaaaaaaa
+        for (int i = 0; i < inventory.getInventorySize(); i++) {
+            Item item = inventory.get(i);
             if (item != null) {
                 item.render();
             }
@@ -263,5 +268,13 @@ public class Player extends Entity {
                 scaleX * 0.6,
                 scaleY * 0.2
         );
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
+    }
+
+    public Item getEquippedItem() {
+        return inventory.get(equippedSlot);
     }
 }

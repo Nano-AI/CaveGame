@@ -32,10 +32,6 @@ public abstract class Entity implements Comparable<Entity> {
     // the attack range of entity
     protected double attackRange = 40.0;
 //    protected double attackRange = 10000.0;
-    // inventory size of entity
-    protected int inventorySize = 8;
-    // items in inventory
-    protected Item[] inventory;
     // what slot they have equipped
     protected int equippedSlot = 0;
     // if they have to reset animation
@@ -176,9 +172,6 @@ public abstract class Entity implements Comparable<Entity> {
     }
 
     public boolean isAttacking(Entity e) {
-        if (inventory[equippedSlot] == null) {
-            return false;
-        }
         return this.attacking && inAttackRange(e);
     }
 
@@ -194,9 +187,9 @@ public abstract class Entity implements Comparable<Entity> {
         this.attacking = isAttacking;
     }
 
-    public Item getEquippedItem() {
-        return inventory[equippedSlot];
-    }
+//    public Item getEquippedItem() {
+//        return inventory[equippedSlot];
+//    }
 
     public void setReset(boolean reset) {
         this.reset = reset;

@@ -145,12 +145,12 @@ public class Goblin extends Entity {
                 (int) (scaleY),
                 null
         );
-        Window.getBuffer().drawRect(
-                (int) (hitbox.position.x),
-                (int) (hitbox.position.y),
-                (int) hitbox.size.x,
-                (int) hitbox.size.y
-        );
+//        Window.getBuffer().drawRect(
+//                (int) (hitbox.position.x),
+//                (int) (hitbox.position.y),
+//                (int) hitbox.size.x,
+//                (int) hitbox.size.y
+//        );
     }
 
     @Override
