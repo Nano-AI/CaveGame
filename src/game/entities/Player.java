@@ -4,6 +4,7 @@
 package game.entities;
 
 import display.Window;
+import game.entities.items.Food;
 import game.entities.items.Item;
 import game.entities.items.Sword;
 import game.ui.Inventory;
@@ -69,7 +70,9 @@ public class Player extends Entity {
 
         this.animationTimer = this.walkAnimationTimer;
         this.attackAnimationTimer = new Timer(sword.getAttackSpeed() / attack.getSheetWidth());
+    }
 
+    public void setInventory() {
         this.inventory = new Inventory(scene.getCamera(), this, new Vector2(32, 32));
         // add the sword to inventory
         sword.setEquipped(true);
@@ -190,13 +193,16 @@ public class Player extends Entity {
         // if mouse is down
         if (mouseDown) {
             // make sure equipped item isn't null
-            if (inventory.get(equippedSlot) != null) {
+            if (inventory.getEquippedItem() != null) {
                 // if it's a sword
-                if (inventory.get(equippedSlot) == sword) {
+                if (inventory.getEquippedItem() == sword) {
                     // use it
-                    inventory.get(equippedSlot).use();
+                    inventory.getEquippedItem().use();
                     // we havnet reset, we need to reset
                     this.reset = false;
+                } else if (inventory.getEquippedItem() instanceof Food) {
+                    inventory.getEquippedItem().use();
+                    inventory.removeEquippedItem();
                 }
             }
         }
@@ -225,6 +231,8 @@ public class Player extends Entity {
             // reset timer
             this.animationTimer.restart();
         }
+
+        inventory.update();
     }
 
     @Override
@@ -242,6 +250,16 @@ public class Player extends Entity {
                 (int) scaleY,
                 null
         );
+
+//        graphics.drawImage(
+//                sword.getImage(),
+//                (int) (position.x - scaleX / 2),
+//                (int) (position.y - scaleY / 2),
+//                (int) scaleX,
+//                (int) scaleY,
+//                null
+//        );
+        sword.getImage();
 //        graphics.drawRect(
 //                (int) (hitbox.position.x),
 //                (int) (hitbox.position.y),

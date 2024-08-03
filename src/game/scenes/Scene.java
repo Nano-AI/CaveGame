@@ -6,6 +6,7 @@ package game.scenes;
 import game.entities.Camera;
 import game.entities.Entity;
 import game.entities.Player;
+import game.entities.items.Item;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 public abstract class Scene {
     // entities in the scene
     protected List<Entity> entities;
+    // dropped items on the floor
+    protected List<Item> droppedItems = new LinkedList<>();
     // camera in the scene
     protected Camera camera;
     // player in the scene
@@ -49,5 +52,13 @@ public abstract class Scene {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void addEntity(Entity e) {
+        this.entities.add(e);
+    }
+
+    public void addDroppedItem(Item item) {
+        this.droppedItems.add(item);
     }
 }

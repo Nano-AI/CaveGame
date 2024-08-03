@@ -21,11 +21,11 @@ public class Sword extends Item {
         audio2 = Assets.getSound("assets/sounds/07_human_atk_sword_2_converted.wav");
         audio3 = Assets.getSound("assets/sounds/07_human_atk_sword_3_converted.wav");
         // setup base vars
-        this.baseDamage = 10;
+        this.baseDamage = 1000;
         this.critChance = .10;
         this.critMultiplier = 2;
         this.attackSpeed = 0.75;
-        this.image = null;
+        this.image = Assets.getTileSheet("assets/tiles/Tileset/fullswords.png", 16, 16).getImage(1).normal();
         this.offset = new Vector2(8, -8);
         this.audioClip = audio1;
     }

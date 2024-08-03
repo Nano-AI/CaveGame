@@ -74,7 +74,7 @@ public class Vector2 {
      * @param b Y Value to add by
      * @return New vector that uses current and passed x & y value to the vector
      */
-    public Vector2 plus(float a, float b) {
+    public Vector2 plus(double a, double b) {
         return new Vector2(this.x + a, this.y + b);
     }
 

@@ -3,6 +3,7 @@
  */
 package game.scenes;
 
+import game.entities.items.Item;
 import game.ui.FPSLabel;
 import display.Window;
 import game.entities.*;
@@ -32,6 +33,14 @@ public class Cave extends Scene {
         map.addHitboxes("Props3", entities);
         map.addRenderOnTop("Roof");
 
+
+        // setup camera & make sure ratio matches with the window
+        double widthToHeight = (double) Window.get().getHeight() / Window.get().getWidth();
+        // setup the camera
+        camera = new Camera(new Vector2(16, 16),
+                new Vector2(750, 750 * widthToHeight),
+                new Vector2(map.getWidth() - 16, map.getHeight() + 16));
+
         // init the player @    pos                            scale
         player = new Player(new Vector2(200f, 64f), new Vector2(4, 4));
         // init player
@@ -55,14 +64,6 @@ public class Cave extends Scene {
                 entities.add(c);
             }
         }
-
-        // setup camera & make sure ratio matches with the window
-        double widthToHeight = (double) Window.get().getHeight() / Window.get().getWidth();
-        // setup the camera
-        camera = new Camera(new Vector2(16, 16),
-                new Vector2(750, 750 * widthToHeight),
-                new Vector2(map.getWidth() - 16, map.getHeight() + 16));
-
         fpsLabel = new FPSLabel(camera);
 
         // init camera
@@ -73,6 +74,7 @@ public class Cave extends Scene {
         entities.add(player);
         map.camera = camera;
         map.setupImages();
+        player.setInventory();
     }
 
     @Override
@@ -92,6 +94,9 @@ public class Cave extends Scene {
             }
             i++;
         }
+        for (Item item : droppedItems) {
+            item.update();
+        }
         fpsLabel.update();
     }
 
@@ -101,6 +106,9 @@ public class Cave extends Scene {
         map.renderMap(false);
         // render camera
         camera.render();
+        for (Item i : droppedItems) {
+            i.render();
+        }
         // iterate through entities
         for (Entity e : entities) {
             e.render(); // render entity
@@ -112,6 +120,7 @@ public class Cave extends Scene {
 //                );
 //            }
         }
+
         map.renderMap(true);
         fpsLabel.render();
         player.getInventory().render();

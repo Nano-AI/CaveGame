@@ -4,6 +4,7 @@
 package game.entities;
 
 import display.Window;
+import game.entities.items.Food;
 import utils.Time;
 import utils.Timer;
 import utils.math.Range;
@@ -57,11 +58,15 @@ public class Goblin extends Entity {
 
     @Override
     public void update() {
+        // it's gone
         if (hide) return;
-        animationTimer.update();
+        // update animation
+        this.animationTimer.update();
 
+        // calc distance to player
         Vector2 distance = this.position.distanceTo(scene.getPlayer().position);
 
+        // check if we're supposed to be dead
         if (hp <= 0 && !dead) {
             deadSound.play();
             this.image = die;
@@ -71,14 +76,19 @@ public class Goblin extends Entity {
             animationFrames.setRange(0, 11);
             animationTimer = deadAnimationTimer;
             animationFrames.reset();
+
         }
 
+        // death animation
         if (image == die && dead && !animationFrames.hasCapped()) {
             if (animationTimer.isDone()) {
                 animationFrames.increment();
                 animationTimer.restart();
             }
             if (animationFrames.hasCapped()) {
+                scene.addDroppedItem(
+                        new Food(scene, this, position, new Vector2(26, 26))
+                );
                 this.hide = true;
                 this.remove = true;
             }
@@ -92,7 +102,6 @@ public class Goblin extends Entity {
 
         if (distance.magnitude() < 200) {
             Vector2 move = distance.unitVector().times(Time.deltaT() * 50);
-//            this.animationTimer.update();
             if (!dead) {
                 movePosition(move);
 

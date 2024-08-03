@@ -24,4 +24,8 @@ public class Timer {
     public boolean isDone() {
         return this.timer <= 0;
     }
+
+    public void setTimer(double timer) {
+        this.timer = timer;
+    }
 }

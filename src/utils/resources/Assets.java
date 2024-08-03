@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 import org.w3c.dom.Document;
 import utils.tile.TileMap;
 import utils.tile.TileSheet;
@@ -199,6 +201,13 @@ public class Assets {
             s = sounds.get(f.getAbsolutePath());
         }
         return s;
+    }
+
+    public static File getRandomFile(String path) {
+        System.out.println(path);
+        File[] files = new File(path).listFiles();
+        assert files != null;
+        return files[(int) (Math.random() * files.length)];
     }
 
 //    public static File new File(String path) {
