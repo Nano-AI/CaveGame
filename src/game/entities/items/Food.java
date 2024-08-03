@@ -16,16 +16,7 @@ public class Food extends Item {
     private Vector2 size;
     private Scene scene;
     private boolean hide = false;
-    String[] randomWords = {
-            yummers,
-            bet that was good, huh?,
-            how did a zombie drop food?,
-            that looked scrumptious,
-            wowza,
-            eating on the job is prohibited,
-            can you maybe close your mouth and chew,
-            why do you eat so loud
-    };
+
     /**
      * @param e Owner of item
      */
@@ -83,5 +74,9 @@ public class Food extends Item {
     public void use() {
         File soundFile = Assets.getRandomFile("assets/sounds/eat");
         Assets.getSound(soundFile.getAbsolutePath()).play();
+        if (Math.random() < 0.25) {
+            File messageFile = Assets.getRandomFile("assets/sounds/messages");
+            Assets.getSound(messageFile.getAbsolutePath()).play();
+        }
     }
 }

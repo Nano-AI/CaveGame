@@ -23,6 +23,8 @@ if __name__ == "__main__":
             texts = input().replace("\n", "").replace(",", "")
         except EOFError:
             break
+        if texts == "" or texts == "quit":
+            break
         lines.append(texts)
     index = 0
 
