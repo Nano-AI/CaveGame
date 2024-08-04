@@ -137,6 +137,10 @@ public abstract class Entity implements Comparable<Entity> {
         }
     }
 
+    public void movePositionForce(double dx, double dy) {
+        this.position.add(dx, dy);
+    }
+
     public void movePosition(Vector2 dp) {
         movePosition(dp.x, dp.y);
     }

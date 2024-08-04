@@ -17,6 +17,11 @@ public class Vector2 {
         this.y = y;
     }
 
+    public Vector2(Vector2 position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
+
     /**
      * Setter
      * @param x Set x value

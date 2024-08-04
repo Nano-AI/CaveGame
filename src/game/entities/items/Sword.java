@@ -14,6 +14,7 @@ public class Sword extends Item {
     private Sound audio1;
     private Sound audio2;
     private Sound audio3;
+
     public Sword(Entity owner) {
         super(owner);
         // setup sounds

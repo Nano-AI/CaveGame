@@ -143,7 +143,9 @@ public class Inventory extends UI {
         return this.inventory[inventoryIndex];
     }
 
-    public void removeEquippedItem() {
+    public Item removeEquippedItem() {
+        Item temp = this.inventory[inventoryIndex];
         this.inventory[inventoryIndex] = null;
+        return temp;
     }
 }

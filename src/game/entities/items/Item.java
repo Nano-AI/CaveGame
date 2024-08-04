@@ -4,6 +4,7 @@
 package game.entities.items;
 
 import game.entities.Entity;
+import utils.Timer;
 import utils.math.Vector2;
 import utils.resources.Sound;
 
@@ -16,6 +17,8 @@ public abstract class Item {
     protected double critMultiplier = 0;
     protected double attackSpeed = 0;
     protected double timeLeftToAttack = 0;
+    protected Timer pickUpTimer = new Timer(3);
+    protected Vector2 position;
     // image
     protected BufferedImage image = null;
     // image offset
@@ -32,6 +35,8 @@ public abstract class Item {
     protected double useTimeTimer = 0;
     // if using
     protected boolean using = false;
+
+    public boolean hide = false;
 
     /**
      * @param e Owner of item
@@ -108,5 +113,16 @@ public abstract class Item {
      */
     public double getAttackSpeed() {
         return this.attackSpeed;
+    }
+
+    public void setPosition(Vector2 position) {
+        if (this.position == null) {
+            this.position = new Vector2(position);
+        }
+        this.position.set(position);
+    }
+
+    public void resetTimer() {
+        this.pickUpTimer.restart();
     }
 }

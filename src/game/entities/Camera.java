@@ -37,7 +37,13 @@ public class Camera extends Entity {
     @Override
     public void update() {
         // get player's center position
-        Vector2 focusCenter = focus.getCenter();
+        if (focus == null) return;
+        Vector2 focusCenter;
+        if (focus.image != null) {
+            focusCenter = focus.getCenter();
+        } else {
+            focusCenter = focus.getPosition();
+        }
         // calculate dx and dy
         //              player in the center location           center pos
         int dx = (int) ((focusCenter.x - cameraSize.x / 2) - position.x);

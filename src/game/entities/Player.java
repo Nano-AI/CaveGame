@@ -19,6 +19,7 @@ import utils.tile.TileSheet;
 import utils.Time;
 import utils.math.Vector2;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -175,8 +176,12 @@ public class Player extends Entity {
         // then mult by a constant, speed
         Vector2 dp = direction.unitVector().multiply(Time.deltaT()).multiply(100);
         // if we're not attacking, move
-        if (!attacking && !inventory.get(equippedSlot).isUsing()) {
-            movePosition(dp);
+        if (!attacking) {
+            if (inventory.getEquippedItem() != null && !inventory.getEquippedItem().isUsing()) {
+                movePosition(dp);
+            } else if (inventory.getEquippedItem() == null) {
+                movePosition(dp);
+            }
         }
 
         // iterate through every item
@@ -230,6 +235,16 @@ public class Player extends Entity {
             this.animationFrames.reset();
             // reset timer
             this.animationTimer.restart();
+        }
+
+        if (KeyInput.isPressed(KeyEvent.VK_BACK_SPACE)) {
+            Item i = inventory.removeEquippedItem();
+            if (i != null) {
+                i.setPosition(this.position);
+                scene.addDroppedItem(i);
+                i.hide = false;
+                i.resetTimer();
+            }
         }
 
         inventory.update();

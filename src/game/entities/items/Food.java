@@ -12,10 +12,8 @@ import java.io.File;
 import java.util.Vector;
 
 public class Food extends Item {
-    private Vector2 position;
     private Vector2 size;
     private Scene scene;
-    private boolean hide = false;
 
     /**
      * @param e Owner of item
@@ -49,13 +47,15 @@ public class Food extends Item {
     @Override
     public void update() {
         if (hide) return;
+        this.pickUpTimer.update();
+
         Vector2 distanceTo = scene.getPlayer().getPosition().distanceTo(position);
         float mag = distanceTo.magnitude();
-        if (!scene.getPlayer().getInventory().inventoryFull && mag <= 32) {
+        if (!scene.getPlayer().getInventory().inventoryFull && mag <= 32 && this.pickUpTimer.isDone()) {
             hide = true;
             scene.getPlayer().getInventory().addToInventory(this);
             Assets.getSound("assets/sounds/01_chest_open_1_converted.wav").play();
-        } else if (!scene.getPlayer().getInventory().inventoryFull && mag <= 100) {
+        } else if (!scene.getPlayer().getInventory().inventoryFull && mag <= 100 && this.pickUpTimer.isDone()) {
             this.position.subtract(distanceTo.times(Time.deltaT()));
         }
     }
@@ -74,7 +74,7 @@ public class Food extends Item {
     public void use() {
         File soundFile = Assets.getRandomFile("assets/sounds/eat");
         Assets.getSound(soundFile.getAbsolutePath()).play();
-        if (Math.random() < 0.25) {
+        if (Math.random() < 0.5) {
             File messageFile = Assets.getRandomFile("assets/sounds/messages");
             Assets.getSound(messageFile.getAbsolutePath()).play();
         }

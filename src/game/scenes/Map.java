@@ -7,7 +7,6 @@ import display.Window;
 import game.entities.Camera;
 import game.entities.Empty;
 import game.entities.Entity;
-import utils.resources.Assets;
 import utils.tile.*;
 import utils.math.*;
 
@@ -152,7 +151,7 @@ public class Map {
                             map.getTileHeight() * tileScale.y
                     );
                     // create an entity
-                    Entity e = new Empty(r.position);
+                    Entity e = new Empty(r.position, new Vector2(1, 1));
                     // set the hitbox
                     e.setHitbox(r);
                     // add it to the list

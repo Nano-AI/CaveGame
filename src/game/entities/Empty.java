@@ -3,8 +3,8 @@ package game.entities;
 import utils.math.Vector2;
 
 public class Empty extends Entity {
-    public Empty(Vector2 position) {
-        super(position);
+    public Empty(Vector2 position, Vector2 vector2) {
+        super(position, vector2);
     }
 
     @Override
